@@ -22,3 +22,5 @@ SoundFX created via https://sfxr.me
 
 This will describe and list features that are implemented to a sufficient manner.
 
+10/18/2026: Created Plan, Created simple boards html page w/css. Added Sounds/SFX. Added named blank scripts. 
+
