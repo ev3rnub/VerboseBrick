@@ -1,16 +1,14 @@
+//Course: GPE104 
+//Prof: Matthew Henry 
+//Student: Chad V
+
 using UnityEngine;
 
-public class Pawn : MonoBehaviour
+public abstract class Pawn : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
+    public MyController someController; 
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    public abstract void Move(Vector3 someMoveVector);
+    public abstract void Rotate(float someAngle);
+    public abstract void Start();
 }

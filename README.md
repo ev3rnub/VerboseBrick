@@ -22,5 +22,6 @@ SoundFX created via https://sfxr.me
 
 This will describe and list features that are implemented to a sufficient manner.
 
-10/18/2026: Created Plan, Created simple boards html page w/css. Added Sounds/SFX. Added named blank scripts. 
+10/18/2026: Created Plan, Created simple boards html page w/css. Added Sounds/SFX. Added named blank scripts along with folder structure to unity project. 
 
+10/20/2026: Implemented pawn/controller model for player/enemy. Added random movement to enemy. Implemented boundry checking and player/enemy pos checking.  

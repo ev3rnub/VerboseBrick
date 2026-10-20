@@ -1,16 +1,11 @@
+//Course: GPE104 
+//Prof: Matthew Henry 
+//Student: Chad V
+
 using UnityEngine;
 
-public class MyController : MonoBehaviour
+public abstract class MyController : MonoBehaviour
+// NOTE TO SELF: There is a audio class called Controller, Do not use that as a class name :).
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    public Pawn somePawn;
 }
