@@ -41,7 +41,6 @@ public class ControllerEnemy : MyController
        if (somePawn == null)
        {
            somePawn = GetComponent<EnemyPawn>(); // Get pawn from same GameObject
-           // OR: somePawn = FindObjectOfType<PaddlePawn>(); // Find any pawn in scene
        }
 
        if (somePawn != null)

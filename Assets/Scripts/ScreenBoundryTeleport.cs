@@ -32,18 +32,14 @@
             float topBoundary = cameraPos.y + (cameraHeight / 2f);
             float bottomBoundary = cameraPos.y - (cameraHeight / 2f);
 
-            Debug.Log(leftBoundary);
-
             // Get this GameObject's bounds
             SpriteRenderer spriteRenderer = GetComponentInChildren<SpriteRenderer>();
             Collider2D collider = GetComponentInChildren<Collider2D>();
 
-            Debug.Log(spriteRenderer);
-
             float objectWidth = 1f;
             float objectHeight = 1f;
             Vector3 targetPosition = transform.position;
-            
+
             if (spriteRenderer != null)
             {
                objectWidth = spriteRenderer.bounds.size.x;
