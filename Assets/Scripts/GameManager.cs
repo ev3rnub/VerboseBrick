@@ -15,6 +15,7 @@ public class GameManager : MonoBehaviour
     [Header("GameObjects")]
     public static GameManager someGameManager;
     public ControllerBall controllerBall; // get controller ref for player entity.//
+    public Health targetHealth;
 
 
     void Start()
@@ -39,7 +40,12 @@ public class GameManager : MonoBehaviour
 
     public void BrickHit()
     {
+        //some fx
+        //some sfx
+        //somelogic
         Debug.Log("BOOM");
+        var someInt = targetHealth.SubHealth(10);
+        Debug.Log($"{someInt}");
     }
 
     public void BottomHit()
