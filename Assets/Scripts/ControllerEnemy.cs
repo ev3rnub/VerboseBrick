@@ -10,15 +10,7 @@ using System.Collections.Generic;
 
 public class ControllerEnemy : MyController
 {
-    private Camera cam; 
-
-    public Key strafeLeft = Key.A;
-    public Key strafeRight = Key.D;
-    public Key rotateRight = Key.J;
-    public Key rotateLeft = Key.L;
-    public Key quitGame = Key.Escape;
-    public Key shoot = Key.Space;
-    public Key options = Key.O;
+    private Camera cam;
 
     public float someMaxWidth = Screen.width;
 

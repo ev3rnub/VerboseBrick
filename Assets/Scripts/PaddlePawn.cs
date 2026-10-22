@@ -1,6 +1,6 @@
 //Course: GPE104
-   //Prof: Matthew Henry
-   //Student: Chad V
+//Prof: Matthew Henry
+//Student: Chad V
 
    using UnityEngine;
    using System.Collections;
@@ -12,6 +12,8 @@
        public float turnSpeed = 90;
        public Transform tfBase;
        public Transform tfTurrent;
+       public Vector2 paddleVelocity;
+       private Vector2 previousPosition;
 
        // move transform by some Vector3 * moveSpeed * Time.deltaTime.
        public override void Move(Vector3 someVec3)
@@ -28,7 +30,16 @@
        // on start get ref to Transform and Shooter.
        public override void Start()
        {
-           tfBase = transform.Find("Heroiblock_0");
-           tfTurrent = transform.Find("Heroiblock_0/Heroi_0");
+            previousPosition = tfBase.position;
+            tfBase = transform.Find("Heroiblock_0");
+            tfTurrent = transform.Find("Heroiblock_0/Heroi_0");
        }
+
+
+        public void UpdatePaddleVelocity()
+        {
+            Vector2 currentPos = new Vector2(tfBase.position.x, tfBase.position.y);
+            paddleVelocity = (currentPos - previousPosition) / Time.deltaTime;
+            previousPosition = tfBase.position;
+        }       
    }

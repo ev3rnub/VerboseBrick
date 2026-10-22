@@ -26,7 +26,7 @@
        // on start get ref to Transform and Shooter.
        public override void Start()
        {
-           tfBase = transform.Find("EnemyBlock");
+           tfBase = transform;
        }
 
    }
