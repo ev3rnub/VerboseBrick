@@ -86,6 +86,7 @@ public class ControllerBall : MyController
         {
             // GameManger.Instance....
             someGameManager.BrickHit();
+            someGameManager.targetHealth = collision.gameObject.GetComponent<Health>();
             (somePawn as BallPawn).BounceOffVerticalSurface();
         }
         else if (collision.gameObject.CompareTag("WallBot"))

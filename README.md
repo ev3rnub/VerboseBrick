@@ -28,4 +28,5 @@ This will describe and list features that are implemented to a sufficient manner
 
 10/21/2026: Fully implemented ball controller and pawn so the paddle accellerates the ball a bit. (05-19)
 10/21/2026: Playtested and modified the top edge collider so the ball doesn't get stock behind the Enemyblock. Played with inspector values as well. (20-2014).
-10/21/2026: Implemented a basic gamemanager and health system. Added health.cs to EnemyBlock. (21-2129)
+10/21/2026: Implemented a basic gamemanager and health system. Added health.cs to EnemyBlock. (21-2229)
+10/21/2026: Implemented health reporting to gamemanager. (2129-2325).

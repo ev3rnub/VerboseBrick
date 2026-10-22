@@ -16,7 +16,13 @@ public class Health : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if (currentHealth <= 0)
+        {
+            Debug.Log($"KILL {this.name}");
+            GameManager.someGameManager.SomeGameObjectDied(this.gameObject);
+            Die();
+
+        }
     }
 
     public int AddHealth(int someAmt)
@@ -45,5 +51,10 @@ public class Health : MonoBehaviour
         }
 
         return currentHealth;
+    }
+
+    public void Die()
+    {
+        Destroy(this.gameObject);
     }
 }
