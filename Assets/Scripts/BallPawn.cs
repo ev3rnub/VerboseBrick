@@ -31,6 +31,11 @@ public class BallPawn: Pawn
         }
     }
 
+    public override void Shoot(bool someBool)
+    {
+        
+    }
+
     // rotate the turret by some angle
     public override void Rotate(float someAngle)
     {

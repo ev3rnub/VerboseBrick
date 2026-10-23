@@ -23,6 +23,11 @@
             Debug.Log("Would have rotated turrent.");
        }
 
+       public override void Shoot(bool someBool)
+       {
+        
+       }
+
        // on start get ref to Transform and Shooter.
        public override void Start()
        {

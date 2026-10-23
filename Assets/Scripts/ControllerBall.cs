@@ -60,7 +60,7 @@ public class ControllerBall : MyController
         else if (collision.gameObject.CompareTag("Paddle"))
         {
             Debug.Log("PADDLE");
-            // Get paddle velocity
+            // Get paddle pawn
             PaddlePawn paddlePawn = collision.gameObject.GetComponent<PaddlePawn>();
             Vector2 paddleVelocity = Vector2.zero;
             if (paddlePawn != null)
@@ -85,18 +85,25 @@ public class ControllerBall : MyController
         else if (collision.gameObject.CompareTag("Brick"))
         {
             // GameManger.Instance....
-            someGameManager.BrickHit();
             someGameManager.targetHealth = collision.gameObject.GetComponent<Health>();
+            someGameManager.BrickHit();
             (somePawn as BallPawn).BounceOffVerticalSurface();
+        }
+        else if (collision.gameObject.CompareTag("EnemyPaddle"))
+        {
+            // GameManger.Instance....Need to change this as I added enemyblock tag. 
+            someGameManager.targetHealth = collision.gameObject.GetComponent<Health>();
+            someGameManager.BrickHit();
+            (somePawn as BallPawn).BounceOffVerticalSurface();            
         }
         else if (collision.gameObject.CompareTag("WallBot"))
         {
             // Ball lost - handle life loss
             someGameManager.BottomHit();
         }
-        else
+        else if (collision.gameObject.CompareTag("Bullet"))
         {
-
+            Debug.Log("BULLET ENCOUNTERED");
         }
     }
 }

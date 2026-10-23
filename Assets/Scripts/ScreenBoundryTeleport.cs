@@ -1,7 +1,8 @@
-   using UnityEngine;
+    using UnityEngine;
+    using Unity.U2D;
 
-   public class ScreenBoundaryTeleport : MonoBehaviour
-   {
+    public class ScreenBoundaryTeleport : MonoBehaviour
+    {
        public Camera mainCamera;
        public float padding = 0.5f; // Extra space from edge
        public bool checkLeft = true;
@@ -33,8 +34,9 @@
             float bottomBoundary = cameraPos.y - (cameraHeight / 2f);
 
             // Get this GameObject's bounds
-            SpriteRenderer spriteRenderer = GetComponentInChildren<SpriteRenderer>();
-            Collider2D collider = GetComponentInChildren<Collider2D>();
+            //SpriteRenderer spriteRenderer = GetComponent<SpriteShape>();
+            UnityEngine.U2D.SpriteShapeRenderer spriteRenderer = GetComponent<UnityEngine.U2D.SpriteShapeRenderer>();
+            Collider2D collider = GetComponent<Collider2D>();
 
             float objectWidth = 1f;
             float objectHeight = 1f;
@@ -90,4 +92,4 @@
                
             }
        }
-   }
+    }

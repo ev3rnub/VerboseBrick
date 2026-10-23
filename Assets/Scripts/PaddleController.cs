@@ -50,7 +50,7 @@ public class ControllerPlayer : MyController
         if (somePawn != null)
         {
             // Check if either shift key is held
-            bool turboHeld = Keyboard.current.leftShiftKey.isPressed
+            bool solidHeld = Keyboard.current.leftShiftKey.isPressed
                           || Keyboard.current.rightShiftKey.isPressed;
 
             
@@ -76,6 +76,18 @@ public class ControllerPlayer : MyController
             if (Keyboard.current[rotateRight].isPressed)
             {
                 somePawn.Rotate(1);
+            }
+
+            if (Keyboard.current[shoot].wasPressedThisFrame)
+            {
+                if (solidHeld){
+                    somePawn.Shoot(true);
+                }
+                else
+                {
+                    somePawn.Shoot(false);
+                }
+                
             }
             // check if escape was pressed.
             if (Keyboard.current[quitGame].isPressed)

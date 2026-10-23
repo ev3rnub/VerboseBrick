@@ -13,6 +13,8 @@ TagManager:
   - TopPushZone
   - BottomPushZone
   - WallBot
+  - EnemyPaddle
+  - Bullet
   layers:
   - Default
   - TransparentFX

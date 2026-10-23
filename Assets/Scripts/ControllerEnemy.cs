@@ -27,7 +27,7 @@ public class ControllerEnemy : MyController
 
         //if (GameManager.someGameManager != null)
         //{
-        //    GameManager.someGameManager.controllerPlayer = this;
+        //    GameManager.someGameManager.controllerEnemy = this;
         //}
 
        if (somePawn == null)
@@ -72,13 +72,17 @@ public class ControllerEnemy : MyController
     {
         var someInt = UnityEngine.Random.Range(0, 10);
         Debug.Log("ALICE, " + someInt);
-        if (someInt <= 5){
-            moveDir = "RIGHT";  
+        
+        // Determine the randomly chosen direction
+        Vector3 chosenDirection = (someInt <= 5) ? right : left;
+        if (chosenDirection.x == 1)
+        {
+            moveDir = "RIGHT";
         }
         else
         {
             moveDir = "LEFT";
-        }   
+        }
     }
 
 }
