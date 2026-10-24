@@ -59,6 +59,7 @@ public class ControllerBall : MyController
         }
         else if (collision.gameObject.CompareTag("Paddle"))
         {
+            GameManager.someGameManager.Defend();
             Debug.Log("PADDLE");
             // Get paddle pawn
             PaddlePawn paddlePawn = collision.gameObject.GetComponent<PaddlePawn>();

@@ -10,6 +10,8 @@
    {
        public float moveSpeed = 3;
        public Transform tfBase;
+       public GameObject someBullet;
+       public GameObject someBulletSpawn;
 
        // move transform by some Vector3 * moveSpeed * Time.deltaTime.
        public override void Move(Vector3 someVec3)
@@ -23,9 +25,12 @@
             Debug.Log("Would have rotated turrent.");
        }
 
-       public override void Shoot(bool someBool)
+       public override void Shoot()
        {
-        
+            var someOffsetVec3 = new Vector3(-0.2f, 0f, 0f);
+            var somePos = someBulletSpawn.transform.position - someOffsetVec3;
+            GameObject spawned = Instantiate(someBullet, somePos, Quaternion.identity);
+            spawned.transform.rotation = tfBase.rotation;
        }
 
        // on start get ref to Transform and Shooter.

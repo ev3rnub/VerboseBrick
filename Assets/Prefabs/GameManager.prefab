@@ -44,5 +44,40 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 006545d172a7141499929a5eecc351b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
-  controllerBall: {fileID: 0}
+  controlPaddle: {fileID: 0}
+  controllerBall: {fileID: 3603835720101828455, guid: 2f0e62994605f4a2490a6dcfd60fb582, type: 3}
   targetHealth: {fileID: 0}
+  EnemyBlock: {fileID: 2882958346673409680, guid: babc57c0316f04a22a32c4ad4d41a497, type: 3}
+  BrickRow: {fileID: 6277333005839725091, guid: 854077f545cbb49eea9eac9f03e77ea0, type: 3}
+  ballRecenterWall: {fileID: 0}
+  EndGameScreen: {fileID: 0}
+  EndGameScore: {fileID: 0}
+  spawnSlot0: {x: -6.38, y: 2.08, z: 0}
+  spawnSlot1: {x: -2.63, y: 2.08, z: 0}
+  spawnSlot2: {x: -0.2449999, y: 2.08, z: 0}
+  spawnSlot3: {x: 4.12, y: 2.08, z: 0}
+  spawnSlot4: {x: 7.495, y: 2.08, z: 0}
+  BrickRow0: {x: -9.255, y: 4.95, z: 0}
+  BrickRow1: {x: -9.255, y: 4.325, z: 0}
+  BrickRow2: {x: -9.255, y: 3.6999998, z: 0}
+  someWave: {fileID: 0}
+  someLabelScore: {fileID: 0}
+  someBulletsFired: {fileID: 0}
+  somePaddleHealth: {fileID: 0}
+  someHighScoreLabel: {fileID: 0}
+  timeText: {fileID: 0}
+  someScore: 2
+  someHighScore: 0
+  bulletsFired: 0
+  someHighBulletsFired: 0
+  paddleDefends: 0
+  someHighPaddleDefends: 0
+  failures: 0
+  paddleHealth: 0
+  someQuitBtn: {fileID: 0}
+  someRestartBtn: {fileID: 0}
+  white: {r: 1, g: 1, b: 1, a: 1}
+  red: {r: 1, g: 0, b: 0, a: 1}
+  blue: {r: 0, g: 0, b: 1, a: 1}
+  purple: {r: 0.5, g: 0, b: 0.5, a: 1}
+  someOffset: {x: 2, y: 0, z: 0}

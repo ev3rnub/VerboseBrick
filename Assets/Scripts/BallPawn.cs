@@ -31,7 +31,7 @@ public class BallPawn: Pawn
         }
     }
 
-    public override void Shoot(bool someBool)
+    public override void Shoot()
     {
         
     }

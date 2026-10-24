@@ -28,7 +28,7 @@ public class PaddlePawn: Pawn
        tfTurrent.Rotate(0,0,someAngle * turnSpeed * Time.deltaTime);
    }
 
-   public override void Shoot(bool someBool)
+   public override void Shoot()
    {
         var staggerCnt = UnityEngine.Random.Range(0,1);
         if (staggerCnt == 1)
@@ -36,10 +36,6 @@ public class PaddlePawn: Pawn
             var someOffsetVec3 = new Vector3(-0.2f, 0f, 0f);
             var somePos = someBulletSpawn.transform.position - someOffsetVec3;
             GameObject spawned = Instantiate(someBullet, somePos, Quaternion.identity);
-            if (someBool)
-            {
-                spawned.GetComponent<Collider2D>().isTrigger = false;
-            }
             spawned.transform.rotation = tfTurrent.rotation;
         }
         else

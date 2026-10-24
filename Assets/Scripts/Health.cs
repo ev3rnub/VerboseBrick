@@ -14,6 +14,11 @@ public class Health : MonoBehaviour
             currentHealth = 25;
             Debug.Log($"Default Health: 25, setting current health to of {transform.name} to default");
         }
+        else if (gameObject.CompareTag("Paddle"))
+        {
+            currentHealth = 200;
+            GameManager.someGameManager.paddleHealth = currentHealth;
+        }
         else
         {
             currentHealth = 100;

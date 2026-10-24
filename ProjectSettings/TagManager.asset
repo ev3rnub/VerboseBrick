@@ -15,6 +15,7 @@ TagManager:
   - WallBot
   - EnemyPaddle
   - Bullet
+  - BrickRow
   layers:
   - Default
   - TransparentFX

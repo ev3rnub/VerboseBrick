@@ -53,5 +53,12 @@ public class Bullet : MonoBehaviour
             Destroy(this.gameObject);
             someGameManager.BulletHit();          
         }
+        else if (collision.gameObject.CompareTag("Paddle"))
+        {
+            // GameManger.Instance....Need to change this as I added enemyblock tag. 
+            Debug.Log("PADDLE======");
+            someGameManager.targetHealth = collision.gameObject.GetComponent<Health>();
+            someGameManager.BulletHit();
+        }
     }
 }

@@ -31,10 +31,10 @@ public class ControllerPlayer : MyController
         cam = Camera.main; // get ref to main camera
         Debug.Log(cam);
 
-        //if (GameManager.someGameManager != null)
-        //{
-        //    GameManager.someGameManager.controllerPlayer = this;
-        //}
+        if (GameManager.someGameManager != null)
+        {
+           GameManager.someGameManager.controlPaddle = this;
+        }
 
        if (somePawn == null)
        {
@@ -80,14 +80,8 @@ public class ControllerPlayer : MyController
 
             if (Keyboard.current[shoot].wasPressedThisFrame)
             {
-                if (solidHeld){
-                    somePawn.Shoot(true);
-                }
-                else
-                {
-                    somePawn.Shoot(false);
-                }
-                
+                somePawn.Shoot();
+                GameManager.someGameManager.bulletsFired += 1;   
             }
             // check if escape was pressed.
             if (Keyboard.current[quitGame].isPressed)

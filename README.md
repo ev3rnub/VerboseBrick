@@ -32,3 +32,4 @@ This will describe and list features that are implemented to a sufficient manner
 10/21/2026: Implemented health reporting to gamemanager. (2129-2325)
 10/22/2026: Redid my sprites for my player, enemy and ball pawns. (08-10)
 10/22/2026: Implemented player shooting, bullet physics. Implemented "bricks" for the player to break and gather points. {10-1430}
+10/22/2026: Implemented core game loop, with end game screen. Added a coroutine to Gamemanager to deactivate a edge collider to prevent cheese early game loss. Implemented playtime tracking, successful defends, and bullets fired gui elements. Implemented highscore, high level, high time and high defense high scores via PlayerPrefs.

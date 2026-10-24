@@ -38,10 +38,11 @@ public class ControllerEnemy : MyController
        if (somePawn != null)
        {
         StartCoroutine(START_BLOCKAI());
+        StartCoroutine(START_BLOCKAISHOOT());
        }
     }
 
-    // Coroutine to update debug messages every second
+    // Coroutine to move our enemy paddle left an right at random
     private IEnumerator START_BLOCKAI()
     {
         while (true)
@@ -51,6 +52,18 @@ public class ControllerEnemy : MyController
             MoveRandom();
         }
     }
+
+    // Coroutine to shoot off an on
+    private IEnumerator START_BLOCKAISHOOT()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(updateInterval);
+
+            somePawn.Shoot();
+            somePawn.Shoot();
+        }
+    }    
 
     void Update()
     {
