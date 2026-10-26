@@ -53,14 +53,12 @@ public class ControllerEnemy : MyController
         }
     }
 
-    // Coroutine to shoot off an on
+    // Coroutine to shoot off an rnadom shots
     private IEnumerator START_BLOCKAISHOOT()
     {
         while (true)
         {
             yield return new WaitForSeconds(updateInterval);
-
-            somePawn.Shoot();
             somePawn.Shoot();
         }
     }    
@@ -72,6 +70,7 @@ public class ControllerEnemy : MyController
             if (moveDir == "RIGHT")
             {
                 somePawn.Move(right);
+                somePawn.Shoot();
             }
             else
             {

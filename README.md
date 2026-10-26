@@ -49,3 +49,5 @@ This will describe and list features that are implemented to a sufficient manner
 10/25/2026: Reimplemented spawning logic, defined a StatsManager singleton. Added clear local highscore button in optionsGUI which clears high scores. (08-16)
 
 10/25/2026: Added an explosion effect to the EnemyPaddle. Playtested a bit. (16-17)
+
+10/25/2026: Updated Comments. Playtested a bit more. (19-20)

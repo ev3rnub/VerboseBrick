@@ -18,7 +18,7 @@ public class ControllerBall : MyController
     public GameManager someGameManager;
 
 
-// like init, but called start!
+    // like init, but called start!
     void Start()
     {
         cam = Camera.main; // get ref to main camera
@@ -41,6 +41,10 @@ public class ControllerBall : MyController
 
     }
 
+    // OnCollisionEnter2D manages physics collision responses for the ball based on the tag of the impacted object. 
+    // It handles horizontal and vertical wall reflections, calculates paddle hit position and relative velocity to deflect 
+    // off the player paddle while updating defend stats, manages brick and enemy paddle damage/VFX triggers, and detects 
+    // bottom wall collisions to trigger game-over logic.
     void OnCollisionEnter2D(Collision2D collision)
     {
         //collisions NOT WORKING BOOO,

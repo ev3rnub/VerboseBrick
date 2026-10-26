@@ -105,6 +105,11 @@ public class GameManager : MonoBehaviour
         }
     }
 
+
+    // ResetGame reinitializes the entire game state by resetting scoring and gameplay statistics, clearing spawn slots, 
+    // destroying active enemies and brick rows, resetting player and ball positions with initial downward velocity, 
+    // hiding the end game screen, updating UI text elements with fallback references, spawning the starting row and enemy, 
+    // and unpausing the game time scale.
     public void ResetGame()
     {
         // Reset all vars to initial state
@@ -268,6 +273,10 @@ public class GameManager : MonoBehaviour
         
     }
 
+    // Start handles initial scene setup by calling ResetGame, resetting the time scale and tracking timer, 
+    // loading and displaying the high score from PlayerPrefs, verifying or fallback-loading missing EnemyBlock 
+    // and BrickRow prefabs, and binding click event listeners to UI quit and restart buttons.
+
     void Start()
     {
         ResetGame();
@@ -364,6 +373,7 @@ public class GameManager : MonoBehaviour
         #endif
     }    
 
+    // when something dies, something must spawn. This also updates scores, and basd on someGameObject's tag instanciates few or mamy game objects.
     public void SomeGameObjectDied(GameObject someGameObject)
     {
 
@@ -411,50 +421,15 @@ public class GameManager : MonoBehaviour
                 StartCoroutine(DestroyAfterTime());
 
                 // simple wave/level spawning system.
+                // if /else gets a random row amt, enemy count and forthrow chance
+                // and spawns prefabs accordingly. 
+
                 if (currentLevel == 1)
                 {
                     SpawnRow(0);
                     SpawnRow(1);
                     SpawnEnemy(1, EnemyBlock);
                 }
-                // else if (currentLevel <= 2)
-                // {
-                //     SpawnRow(0);
-                //     SpawnRow(1);
-                //     SpawnEnemy(1, EnemyBlock);
-                //     SpawnEnemy(1, EnemyBlock);
-                // }
-                // else if (currentLevel >= 3)
-                // {
-                //     SpawnRow(0);
-                //     SpawnRow(1);
-                //     SpawnRow(2);
-                //     SpawnEnemy(1, EnemyBlock);
-                //     SpawnEnemy(1, EnemyBlock);
-                //     SpawnEnemy(1, EnemyBlock);
-                // }
-                // else if (currentLevel >= 4)
-                // {
-                //     SpawnRow(0);
-                //     SpawnRow(1);
-                //     SpawnRow(2);
-                //     SpawnRow(3);
-                //     SpawnEnemy(1, EnemyBlock);
-                //     SpawnEnemy(1, EnemyBlock);
-                //     SpawnEnemy(1, EnemyBlock);
-                //     SpawnEnemy(1, EnemyBlock);
-                // }
-                // else if (currentLevel >= 5)
-                // {
-                //     SpawnRow(0);
-                //     SpawnRow(1);
-                //     SpawnRow(2);
-                //     SpawnRow(3);
-                //     SpawnEnemy(1, EnemyBlock);
-                //     SpawnEnemy(1, EnemyBlock);
-                //     SpawnEnemy(1, EnemyBlock);
-                //     SpawnEnemy(1, EnemyBlock);
-                // }
                 else
                 {
                     var randRowAmt = UnityEngine.Random.Range(0, 4);
@@ -561,6 +536,10 @@ public class GameManager : MonoBehaviour
         var someInt = targetHealth.SubHealth(25);
     }
 
+    // BottomHit handles game-over logic when the ball passes the bottom boundary. It compares current performance metrics 
+    // (score, paddle defends, wave level, and play time) against saved records in PlayerPrefs, updates high score persistence 
+    // and synchronizes with the stats manager when new records are achieved, formats dynamic end-game UI score reports, pauses 
+    // the physics simulation, and activates the end game screen.
     public void BottomHit()
     {
         var highScore = false;
@@ -728,7 +707,11 @@ public class GameManager : MonoBehaviour
         targetHealth.AddHealth(100 * currentLevel);
     }
 
-    //row spawning
+    // row spawning
+    // SpawnRow manages the procedural spawning of brick row prefabs based on the specified tier or index. 
+    // It instantiates the row at predefined spatial positions, registers the new row into the tracking array, 
+    // iterates through child bricks to apply custom color themes (blue, purple, or white via SpriteShapeRenderer), 
+    // increments the total active brick count, and logs telemetry or unhandled case warnings.    
     public void SpawnRow(int rowToSpawn)
     {
         switch (rowToSpawn)

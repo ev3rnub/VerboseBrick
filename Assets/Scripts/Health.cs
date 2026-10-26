@@ -1,3 +1,10 @@
+//Course: GPE104
+//Prof: Matthew Henry
+//Student: Chad V
+// Simple Health script attached to all the gameobjects that need them. 
+// The script uses fixed update to monitor for -0 health, if so it reports the death, and calls Die. which calls destroy. 
+// Otherwise a simple interface to add health and subtract health.
+
 using UnityEngine;
 
 public class Health : MonoBehaviour

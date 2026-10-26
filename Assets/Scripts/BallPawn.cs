@@ -1,7 +1,7 @@
 //Course: GPE104
 //Prof: Matthew Henry
 //Student: Chad V
-
+// BallPawn is what "moves" the 2d object considered a ball on screen. Since we are using Unity Physics for movemet except 
 
 using UnityEngine;
 using System.Collections;
@@ -29,13 +29,13 @@ public class BallPawn: Pawn
     {
         if (isMoving)
         {
-            //tfBase.position += (Vector3)velocity * ballSpeed * Time.deltaTime;
+            //NOT USED
         }
     }
 
     public override void Shoot()
     {
-        
+        //NOT USED
     }
 
     // rotate the turret by some angle
@@ -53,7 +53,10 @@ public class BallPawn: Pawn
         LaunchBall(new Vector3(Random.Range(-2f, 2f), -1f));
     }
 
-
+    // FixedUpdate handles physics-based speed clamping. 
+    // If the Rigidbody exists, movement is enabled, and the current 
+    // velocity exceeds maxSpeed, it normalizes the movement vector and 
+    // scales it back to enforce the maximum allowed speed limit.
     void FixedUpdate()
     {
         if (rb != null && isMoving && rb.linearVelocity.magnitude > maxSpeed){
@@ -64,6 +67,7 @@ public class BallPawn: Pawn
 
     public void LaunchBall(Vector2 launchDirection)
     {
+        // iflaunchVelMag is greater than max xpeed, clamp, if rb is not null set rb.linearVel to launchVel.
         if (rb != null)
         {
             Vector2 launchVelocity = launchDirection.normalized * ballSpeed;
@@ -84,6 +88,10 @@ public class BallPawn: Pawn
         }
     }
 
+    //Bounce
+    // BounceOffHorizontalSurface handles physics reflection, particle effects, audio feedback, and speed clamping. 
+    // It inverts the horizontal velocity vector to simulate a bounce, randomizes the start rotation and triggers all child particle 
+    // systems, plays the impact sound effect, and finally checks the velocity magnitude to ensure it does not exceed maxSpeed.
     public void BounceOffHorizontalSurface()
     {
         Vector2 currentVelocity = rb.linearVelocity;
@@ -116,6 +124,9 @@ public class BallPawn: Pawn
         }
     }
 
+
+    // BounceOffVerticalSurface manages surface reflection by inverting the vertical velocity component, rescales and triggers all child particle 
+    // systems, plays the impact audio effect, and clamps the final velocity magnitude to ensure it does not exceed maxSpeed.
     public void BounceOffVerticalSurface()
     {      
         Vector2 currentVelocity = rb.linearVelocity;
@@ -142,6 +153,11 @@ public class BallPawn: Pawn
         }
     }
 
+    // BounceOffPaddle handles ball reflection and speed scaling when colliding with the player paddle. 
+    // It increments ball speed, calculates an angle-based velocity vector derived from the hit position, 
+    // enforces maximum speed limits, updates the Rigidbody2D velocity, rescales and triggers child particle 
+    // effects, plays the impact audio, and logs debugging telemetry.
+    
     public void BounceOffPaddle(float hitPosition, Vector2 paddleVelocity)
     {
         // Increase speed
