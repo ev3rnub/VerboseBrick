@@ -44,14 +44,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 006545d172a7141499929a5eecc351b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
-  controlPaddle: {fileID: 0}
+  controlPaddle: {fileID: 3274817053613263585, guid: 3247a5666f1df48d18aa19118f52b8dd, type: 3}
   controllerBall: {fileID: 3603835720101828455, guid: 2f0e62994605f4a2490a6dcfd60fb582, type: 3}
   targetHealth: {fileID: 0}
   EnemyBlock: {fileID: 2882958346673409680, guid: babc57c0316f04a22a32c4ad4d41a497, type: 3}
   BrickRow: {fileID: 6277333005839725091, guid: 854077f545cbb49eea9eac9f03e77ea0, type: 3}
-  ballRecenterWall: {fileID: 0}
-  EndGameScreen: {fileID: 0}
-  EndGameScore: {fileID: 0}
+  ballRecenterWall: {fileID: 8925203994916668725, guid: 07da41eaa14a84041b8800ef5d579b4b, type: 3}
+  EndGameScreen: {fileID: 6296743067592396958, guid: e5ba1d214aa5545d2ac3e071e5c85eb0, type: 3}
+  EndGameScore: {fileID: 4891778539869927112, guid: 01cb07f4e1ba04e21935036fe503260b, type: 3}
   spawnSlot0: {x: -6.38, y: 2.08, z: 0}
   spawnSlot1: {x: -2.63, y: 2.08, z: 0}
   spawnSlot2: {x: -0.2449999, y: 2.08, z: 0}
@@ -60,13 +60,13 @@ MonoBehaviour:
   BrickRow0: {x: -9.255, y: 4.95, z: 0}
   BrickRow1: {x: -9.255, y: 4.325, z: 0}
   BrickRow2: {x: -9.255, y: 3.6999998, z: 0}
-  someWave: {fileID: 0}
-  someLabelScore: {fileID: 0}
-  someBulletsFired: {fileID: 0}
-  somePaddleHealth: {fileID: 0}
-  someHighScoreLabel: {fileID: 0}
-  timeText: {fileID: 0}
-  someScore: 2
+  someWave: {fileID: 2935175917293709246, guid: 936101149e71f40f68b0cc0a1bcfbc6c, type: 3}
+  someLabelScore: {fileID: 8848823627300443048, guid: 079b89ff36a3442a1a3cb62577474d98, type: 3}
+  someBulletsFired: {fileID: 7011579372670620588, guid: 3e0b00c8a5bac4db9bd039dcd3dd31b3, type: 3}
+  someHighScoreLabel: {fileID: 5751721161205404009, guid: f24b8c961a39448b4a50319a52697742, type: 3}
+  timeText: {fileID: 3214761584562021134, guid: a2cd33312baea4e14a099b87685979b4, type: 3}
+  somePaddleDefends: {fileID: 8426287514226489947, guid: 22408a6aad7b94efe8d847e054353d26, type: 3}
+  someScore: 40
   someHighScore: 0
   bulletsFired: 0
   someHighBulletsFired: 0

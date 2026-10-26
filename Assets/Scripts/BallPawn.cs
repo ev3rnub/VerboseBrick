@@ -18,9 +18,11 @@ public class BallPawn: Pawn
     public bool isMoving = false;
     public Rigidbody2D rb;
     public float accel = 2.5f;
-    public float maxSpeed = 15f;
-    public float paddleInfluence = 0.2f; // 20% of paddle velocity
+    public float maxSpeed = 45f;
+    public float paddleInfluence = 0.4f; // 20% of paddle velocity
     public float paddleVelocity;
+    public AudioSource hitAudioSource;
+    public AudioSource hitAudioSourceII;
 
 
     public override void Move(Vector3 someVec3)
@@ -86,7 +88,27 @@ public class BallPawn: Pawn
     {
         Vector2 currentVelocity = rb.linearVelocity;
         rb.linearVelocity = new Vector2(-currentVelocity.x, currentVelocity.y);
-        
+        // activate particle system on bullet hit from player/self.
+        ParticleSystem[] someVFX = this.gameObject.GetComponentsInChildren<ParticleSystem>();
+        if (someVFX == null)
+        {
+            Debug.Log("SOMEVFX is NULL");
+        }
+        else
+        {
+            foreach( ParticleSystem somePS in someVFX)
+            {
+                // Get the Main module of the particle system
+                var mainModule = somePS.main;
+                
+                // Set a random start rotation (in radians, from 0 to 360 degrees converted to radians)
+                float randomAngleRad = UnityEngine.Random.Range(0f, 360f) * Mathf.Deg2Rad;
+                mainModule.startRotation = randomAngleRad;
+                somePS.Play();
+            }
+            
+        }
+        hitAudioSourceII.Play();
         // Clamp to maxSpeed
         if (rb.linearVelocity.magnitude > maxSpeed)
         {
@@ -98,7 +120,21 @@ public class BallPawn: Pawn
     {      
         Vector2 currentVelocity = rb.linearVelocity;
         rb.linearVelocity = new Vector2(currentVelocity.x, -currentVelocity.y);
-        
+        ParticleSystem[] someVFX = this.gameObject.GetComponentsInChildren<ParticleSystem>();
+        if (someVFX == null)
+        {
+            Debug.Log("SOMEVFX is NULL");
+        }
+        else
+        {
+            foreach( ParticleSystem somePS in someVFX)
+            {
+                somePS.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
+                somePS.Play();
+            }
+            
+        }        
+        hitAudioSourceII.Play();
         // Clamp to maxSpeed
         if (rb.linearVelocity.magnitude > maxSpeed)
         {
@@ -124,7 +160,7 @@ public class BallPawn: Pawn
         Vector2 newVelocity = new Vector2(xVel, yVel);
 
         // Add paddle influence (small amount for realism)
-        newVelocity += paddleVelocity * paddleInfluence;
+        //newVelocity += paddleVelocity * paddleInfluence;
 
         // Clamp to maxSpeed before applying
         if (newVelocity.magnitude > maxSpeed)
@@ -135,30 +171,29 @@ public class BallPawn: Pawn
         // Apply to physics body
         rb.linearVelocity = newVelocity;
 
-        // Update ballSpeed to match actual speed for future calculations
         ballSpeed = rb.linearVelocity.magnitude;
 
+        ParticleSystem[] someVFX = this.gameObject.GetComponentsInChildren<ParticleSystem>();
+        if (someVFX == null)
+        {
+            Debug.Log("SOMEVFX is NULL");
+        }
+        else
+        {
+            foreach( ParticleSystem somePS in someVFX)
+            {
+                somePS.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
+                somePS.Play();
+            }
+            
+        }
+        hitAudioSource.Play();
         Debug.Log($"Paddle hit! ballSpeed={ballSpeed:F2}, velocity.magnitude={rb.linearVelocity.magnitude:F2}");
     }
 
     void OnTriggerEnter2D(Collider2D other)
     {
         // Check if the object that entered is the ball
-        if (other == rb.GetComponent<Collider2D>())
-        {
-            Debug.Log("TopPushZone triggered - pushing ball down");
-            
-            // Push the ball downward with a gentle force
-            // This prevents the ball from getting stuck at the top
-            Vector2 pushForce = new Vector2(0, -2f); // Push straight down
-            rb.AddForce(pushForce, ForceMode2D.Impulse);
-            
-            // Optional: Also ensure it's moving downward
-            if (rb.linearVelocity.y > -2f) // If moving up or barely moving down
-            {
-                Vector2 currentVelocity = rb.linearVelocity;
-                rb.linearVelocity = new Vector2(currentVelocity.x, -3f); // Ensure downward movement
-            }
-        }
+
     }
 }

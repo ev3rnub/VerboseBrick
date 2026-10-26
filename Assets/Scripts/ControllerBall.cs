@@ -59,11 +59,26 @@ public class ControllerBall : MyController
         }
         else if (collision.gameObject.CompareTag("Paddle"))
         {
+            ParticleSystem[] someVFX = collision.gameObject.GetComponentsInChildren<ParticleSystem>();
+            if (someVFX == null)
+            {
+                Debug.Log("SOMEVFX is NULL");
+            }
+            else
+            {
+                foreach (ParticleSystem somePS in someVFX)
+                {
+                    Debug.Log($"SOMEPS: {somePS.name}");
+                    somePS.transform.localScale = new Vector3(.7f, .7f, .7f);
+                    somePS.Play();
+                }
+                
+            }
             GameManager.someGameManager.Defend();
             Debug.Log("PADDLE");
             // Get paddle pawn
             PaddlePawn paddlePawn = collision.gameObject.GetComponent<PaddlePawn>();
-            Vector2 paddleVelocity = Vector2.zero;
+            Vector2 paddleVelocity = collision.gameObject.GetComponent<Rigidbody2D>().linearVelocity;
             if (paddlePawn != null)
             {
                 paddlePawn.UpdatePaddleVelocity(); // Update velocity before getting it
@@ -80,19 +95,47 @@ public class ControllerBall : MyController
             
             // Clamp hit position between -1 and 1
             hitPosition = Mathf.Clamp(hitPosition, -1f, 1f);
-            
+            Debug.Log($"HIT POS: {hitPosition}");
+            Debug.Log($"PAD VEL: {paddleVelocity}");
             (somePawn as BallPawn).BounceOffPaddle(hitPosition, paddleVelocity);
         }
         else if (collision.gameObject.CompareTag("Brick"))
         {
-            // GameManger.Instance....
+            ParticleSystem[] someVFX = collision.gameObject.GetComponentsInChildren<ParticleSystem>();
+            if (someVFX == null)
+            {
+                Debug.Log("SOMEVFX is NULL");
+            }
+            else
+            {
+                foreach (ParticleSystem somePS in someVFX)
+                {
+                    somePS.transform.localScale = new Vector3(1f, 1f, 1f);
+                    somePS.Play();
+                }
+                
+            } 
             someGameManager.targetHealth = collision.gameObject.GetComponent<Health>();
             someGameManager.BrickHit();
             (somePawn as BallPawn).BounceOffVerticalSurface();
         }
         else if (collision.gameObject.CompareTag("EnemyPaddle"))
         {
-            // GameManger.Instance....Need to change this as I added enemyblock tag. 
+            // activate particle system on EnemyPaddle collision.
+            ParticleSystem[] someVFX = collision.gameObject.GetComponentsInChildren<ParticleSystem>();
+            if (someVFX == null)
+            {
+                Debug.Log("SOMEVFX is NULL");
+            }
+            else
+            {
+                foreach( ParticleSystem somePS in someVFX)
+                {
+                    somePS.transform.localScale = new Vector3(1f, 1f, 1f);
+                    somePS.Play();
+                }
+                
+            }
             someGameManager.targetHealth = collision.gameObject.GetComponent<Health>();
             someGameManager.BrickHit();
             (somePawn as BallPawn).BounceOffVerticalSurface();            

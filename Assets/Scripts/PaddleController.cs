@@ -25,6 +25,10 @@ public class ControllerPlayer : MyController
     public Vector3 right = new Vector3(1f, 0f, 0f);
     public Vector3 left = new Vector3(-1f, 0f, 0f);
 
+    public AudioSource shootAudioSource;
+    public AudioSource moveAudioSource;
+    public AudioSource bulletHitAudioSource;
+    public AudioSource ballHitAudioSource;
     // like init, but called start!
     void Start()
     {
@@ -60,6 +64,7 @@ public class ControllerPlayer : MyController
              //   Debug.Log("a was pressed!");
                 // move sprite, etc.
                 somePawn.Move(left);
+
             }
             // check if d is being pressed.
             if (Keyboard.current[strafeRight].isPressed)
@@ -81,7 +86,8 @@ public class ControllerPlayer : MyController
             if (Keyboard.current[shoot].wasPressedThisFrame)
             {
                 somePawn.Shoot();
-                GameManager.someGameManager.bulletsFired += 1;   
+                GameManager.someGameManager.bulletsFired += 1;
+                shootAudioSource.Play();
             }
             // check if escape was pressed.
             if (Keyboard.current[quitGame].isPressed)

@@ -12,6 +12,8 @@
        public Transform tfBase;
        public GameObject someBullet;
        public GameObject someBulletSpawn;
+       public AudioSource someAudioSource;
+       public AudioClip someAudioClip;
 
        // move transform by some Vector3 * moveSpeed * Time.deltaTime.
        public override void Move(Vector3 someVec3)
@@ -37,6 +39,16 @@
        public override void Start()
        {
            tfBase = transform;
+       }
+
+       void OnDestroy()
+       {
+            Vector3 someVec3 = tfBase.position;
+            if (someAudioClip!= null)
+            {
+                AudioSource.PlayClipAtPoint(someAudioClip, someVec3);    
+            }
+            
        }
 
    }

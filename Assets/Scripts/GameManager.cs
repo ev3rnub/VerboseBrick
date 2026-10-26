@@ -2,6 +2,11 @@
 //Prof: Matthew Henry 
 //Student: Chad V
 
+// GameManager.cs
+// The GameManager is simply that, a game manager, if all the bricks are gone, it spawns more. If the ball gets past he player it
+// end the game. 
+
+
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
@@ -15,6 +20,7 @@ public class GameManager : MonoBehaviour
 {   
     [Header("GameObjects")]
     public static GameManager someGameManager;
+    public StatsManager someStatsManager;
     public ControllerPlayer controlPaddle;
     public ControllerBall controllerBall; // get controller ref for player entity.//
     public Health targetHealth;
@@ -30,7 +36,7 @@ public class GameManager : MonoBehaviour
     private float lastScenePauseTime;
     private float sceneRuntime;
 
-    [Header("Spawn Slot locations")]
+    [Header("EnemyPaddle Spawn Slot locations")]
     public Vector3 spawnSlot0 = new Vector3(-6.38f, 2.08f, 0f); // far left
     public Vector3 spawnSlot1 = new Vector3(-2.63f, 2.08f, 0f);
     public Vector3 spawnSlot2 = new Vector3(-0.2449999f, 2.08f, 0f);
@@ -38,16 +44,20 @@ public class GameManager : MonoBehaviour
     public Vector3 spawnSlot4 = new Vector3(7.495f, 2.08f, 0f); // far right
     private List<Vector3> slotArray = new List<Vector3>();
 
+    [Header("BrickRow tracking")]
+    private List<GameObject> brickRowArray = new List<GameObject>();
+    
+    [Header("BrickRow Positions")]
     public Vector3 BrickRow0 = new Vector3(-9.25500011f, 4.94999981f, 0f);
     public Vector3 BrickRow1 = new Vector3(-9.25500011f, 4.32499981f, 0f);
     public Vector3 BrickRow2 = new Vector3(-9.25500011f, 3.69999981f, 0f);
+    public Vector3 BrickRow3 = new Vector3(-9.30000019f, 0.100000001f, 0f);
 
     
     [Header("GUI")]
     public TextMeshProUGUI someWave;
     public TextMeshProUGUI someLabelScore;
     public TextMeshProUGUI someBulletsFired;
-    public TextMeshProUGUI somePaddleHealth;
     public TextMeshProUGUI someHighScoreLabel;
     public TextMeshProUGUI timeText;
     public TextMeshProUGUI somePaddleDefends;
@@ -80,20 +90,189 @@ public class GameManager : MonoBehaviour
     public Vector3 someOffset = new Vector3(2f, 0f, 0f);
 
 
+    public void Awake()
+    {
+
+        if (someGameManager == null)
+        {
+            someGameManager = this;
+            Time.timeScale = 1f;
+        }
+        else
+        {
+            Destroy(gameObject);
+            return;
+        }
+    }
+
+    public void ResetGame()
+    {
+        // Reset all vars to initial state
+        someScore = 0;
+        someHighScore = 0;
+        bulletsFired = 0;
+        someHighBulletsFired = 0;
+        paddleDefends = 0;
+        someHighPaddleDefends = 0;
+        failures = 0;
+        paddleHealth = 0;
+        currentLevel = 0;
+        someHighCurrentLevel = 0;
+        currentRowLevel = 0;
+        currBrickCnt = 0;
+        gamePlayCounter = 0;
+        sceneStartTime = Time.time;
+        lastScenePauseTime = 0f;
+        sceneRuntime = 0f;
+
+        // Re-initialize the slotArray
+        slotArray.Clear();
+        slotArray.Add(spawnSlot0);
+        slotArray.Add(spawnSlot1);
+        slotArray.Add(spawnSlot2);
+        slotArray.Add(spawnSlot3);
+        slotArray.Add(spawnSlot4);
+
+        // Clear any old enemies or brickrows.
+        GameObject[] enemies = GameObject.FindGameObjectsWithTag("EnemyPaddle");
+        foreach (GameObject enemy in enemies){
+            Destroy(enemy);
+        } 
+
+        GameObject[] brickRows = GameObject.FindGameObjectsWithTag("BrickRow");
+        foreach (GameObject brickrow in brickRows)
+        {
+            Destroy(brickrow);
+        }
+
+
+        //reset player
+        controlPaddle.transform.position = new Vector3(1.5309999f, -3.66000009f, 0f);
+        //reset ball to origin
+        controllerBall.transform.position = new Vector3(0f, 0f, 0f);
+        //Read adjust ball velocity.
+        Rigidbody2D rb = controllerBall.GetComponent<Rigidbody2D>();
+        if (rb != null)
+        {
+            float speed = 5f; // Adjust this value to change how fast it moves down
+            rb.linearVelocity = Vector2.down * speed;
+        }
+        if (EndGameScreen != null)
+        {
+            EndGameScreen.SetActive(false);
+        }
+
+
+        // Update UI
+        if (someLabelScore == null)
+        {
+            Debug.Log("someLabelScore is NULL attempting to set");
+            someLabelScore = GameObject.Find("Score")?.GetComponent<TextMeshProUGUI>();
+            if (someLabelScore == null)
+            {
+                someLabelScore = Resources.Load<TextMeshProUGUI>("Prefabs/ScoreLabel");
+            }
+
+        }
+        someLabelScore.text = $"Score: {someScore}";
+        someWave.text = $"Wave: {currentLevel}";
+        someBulletsFired.text = $"Bullets Fired: {bulletsFired}";
+        EndGameScore.text = $"Wave: {currentLevel}\nScore: {someScore}";
+        SpawnRow(0);
+        SpawnEnemy(1, EnemyBlock);
+        Time.timeScale = 1f;
+    }
+
+
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         // This runs after scene reload
-        if (this == someGameManager)
+        if (scene.name == "DefaultLevel")
         {
-            SpawnRow(0);
-            SpawnEnemy(1, EnemyBlock);
+            if (this == someGameManager)
+            {
+                Debug.Log("OnSceneLoaded ========");
+
+                // Load prefabs if they are still null
+                if (controlPaddle == null)
+                {
+                   controlPaddle = FindObjectOfType<ControllerPlayer>();
+                }
+
+                if (controllerBall == null)
+                {
+                    controllerBall = FindObjectOfType<ControllerBall>();
+                }
+
+                if (targetHealth == null)
+                {
+                    targetHealth = FindObjectOfType<Health>();    
+                }
+
+                if (ballRecenterWall == null)
+                {
+                    ballRecenterWall = GameObject.FindGameObjectWithTag("BallRecenterWall");    
+                }
+
+                if (EndGameScreen == null)
+                {
+                    EndGameScreen = GameObject.FindGameObjectWithTag("EndGameScreen");    
+                }
+
+                if (someWave == null)
+                {
+                    someWave = GameObject.Find("WaveLabel")?.GetComponent<TextMeshProUGUI>();    
+                }
+
+                if (someLabelScore == null)
+                {
+                    someLabelScore = GameObject.Find("ScoreLabel")?.GetComponent<TextMeshProUGUI>();    
+                }
+
+                if (someBulletsFired == null)
+                {
+                    someBulletsFired = GameObject.Find("BulletLabel")?.GetComponent<TextMeshProUGUI>();    
+                }
+
+                if (someHighScoreLabel == null)
+                {
+                    someHighScoreLabel = GameObject.Find("HighScoreLabel")?.GetComponent<TextMeshProUGUI>();            
+                }
+
+                if (timeText == null)
+                {
+                    timeText = GameObject.Find("SceneTimeLabel")?.GetComponent<TextMeshProUGUI>();    
+                }
+
+                if (somePaddleDefends == null)
+                {
+                    somePaddleDefends = GameObject.Find("DefendsLabel")?.GetComponent<TextMeshProUGUI>();            
+                }
+
+                if (someQuitBtn == null)
+                {
+                    someQuitBtn = GameObject.Find("QuitButton")?.GetComponent<Button>();            
+                }
+
+                if (someRestartBtn == null)
+                {
+                    someRestartBtn = GameObject.Find("RestartButton")?.GetComponent<Button>();            
+                }
+
+                if (PlayerPrefs.HasKey("HighScore"))
+                {
+                    someHighScoreLabel.text = $"HighScore: {PlayerPrefs.GetInt("HighScore", 0)}";
+                }                
+            }           
         }
+        
     }
 
     void Start()
     {
         ResetGame();
         sceneStartTime = Time.time;
+        Time.timeScale = 1f;
         if (PlayerPrefs.HasKey("HighScore"))
         {
             someHighScoreLabel.text = $"HighScore: {PlayerPrefs.GetInt("HighScore", 0)}";
@@ -132,7 +311,11 @@ public class GameManager : MonoBehaviour
     {
         sceneRuntime = Time.time - sceneStartTime;
         lastScenePauseTime = sceneRuntime;
-        timeText.text = $"Time: {sceneRuntime:F2}s";
+        if (timeText != null)
+        {
+            timeText.text = $"Time: {sceneRuntime:F2}s";
+        }
+        
     }
 
     void OnDestroy()
@@ -148,6 +331,18 @@ public class GameManager : MonoBehaviour
         }        
     }
 
+    void OnEnable()
+    {
+        // Subscribe to the scene loaded event
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    void OnDisable()
+    {
+        // Always unsubscribe when disabled or destroyed
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
     public void OnRestartBtnPressed()
     {
         ResetGame();
@@ -155,8 +350,8 @@ public class GameManager : MonoBehaviour
 
     public void OnQuitBtnPressed()
     {
-        Debug.Log("Exiting Game...");
-        QuitGame();
+        Debug.Log("Exiting to Main Menu...");
+        SceneManager.LoadScene("MainMenu");
     }
 
     public void QuitGame()
@@ -168,22 +363,6 @@ public class GameManager : MonoBehaviour
         UnityEditor.EditorApplication.isPlaying = false;
         #endif
     }    
-
-    public void Awake()
-    {
-
-        if (someGameManager == null)
-        {
-            someGameManager = this;
-            DontDestroyOnLoad(gameObject);
-            Time.timeScale = 1f;
-        }
-        else
-        {
-            Destroy(gameObject);
-            return;
-        }
-    }
 
     public void SomeGameObjectDied(GameObject someGameObject)
     {
@@ -235,23 +414,97 @@ public class GameManager : MonoBehaviour
                 if (currentLevel == 1)
                 {
                     SpawnRow(0);
-                    SpawnEnemy(1, EnemyBlock);
-                }
-                else if (currentLevel == 2)
-                {
-                    SpawnRow(0);
                     SpawnRow(1);
                     SpawnEnemy(1, EnemyBlock);
-                    SpawnEnemy(1, EnemyBlock);
                 }
+                // else if (currentLevel <= 2)
+                // {
+                //     SpawnRow(0);
+                //     SpawnRow(1);
+                //     SpawnEnemy(1, EnemyBlock);
+                //     SpawnEnemy(1, EnemyBlock);
+                // }
+                // else if (currentLevel >= 3)
+                // {
+                //     SpawnRow(0);
+                //     SpawnRow(1);
+                //     SpawnRow(2);
+                //     SpawnEnemy(1, EnemyBlock);
+                //     SpawnEnemy(1, EnemyBlock);
+                //     SpawnEnemy(1, EnemyBlock);
+                // }
+                // else if (currentLevel >= 4)
+                // {
+                //     SpawnRow(0);
+                //     SpawnRow(1);
+                //     SpawnRow(2);
+                //     SpawnRow(3);
+                //     SpawnEnemy(1, EnemyBlock);
+                //     SpawnEnemy(1, EnemyBlock);
+                //     SpawnEnemy(1, EnemyBlock);
+                //     SpawnEnemy(1, EnemyBlock);
+                // }
+                // else if (currentLevel >= 5)
+                // {
+                //     SpawnRow(0);
+                //     SpawnRow(1);
+                //     SpawnRow(2);
+                //     SpawnRow(3);
+                //     SpawnEnemy(1, EnemyBlock);
+                //     SpawnEnemy(1, EnemyBlock);
+                //     SpawnEnemy(1, EnemyBlock);
+                //     SpawnEnemy(1, EnemyBlock);
+                // }
                 else
                 {
-                    SpawnRow(0);
-                    SpawnRow(1);
-                    SpawnRow(2);
-                    SpawnEnemy(1, EnemyBlock);
-                    SpawnEnemy(1, EnemyBlock);
-                    SpawnEnemy(1, EnemyBlock);
+                    var randRowAmt = UnityEngine.Random.Range(0, 4);
+                    var randEnemyCnt = UnityEngine.Random.Range(0, 5);
+                    var fourthRow = UnityEngine.Random.Range(0,1);
+                    if (randRowAmt == 4)
+                    {
+                        SpawnRow(0);
+                        SpawnRow(1);
+                        SpawnRow(2);
+                        SpawnRow(3);
+                    }
+                    else if (randRowAmt == 3)
+                    {
+                        SpawnRow(0);
+                        SpawnRow(1);
+                        SpawnRow(2);
+                        if (fourthRow == 1)
+                        {
+                            SpawnRow(3);
+                        }
+                    }
+                    else if (randRowAmt == 2)
+                    {
+                        SpawnRow(0);
+                        if (fourthRow == 1)
+                        {
+                            SpawnRow(3);
+                        }
+                        else
+                        {
+                            SpawnRow(1);
+                        }
+                    }
+                    else
+                    {
+                        SpawnRow(0);
+                        if (fourthRow == 1)
+                        {
+                            SpawnRow(1);
+                            SpawnRow(2);
+                            SpawnRow(3);
+                        }
+                    }
+
+                    for (var i = 0; i < randEnemyCnt; i++)
+                    {
+                        SpawnEnemy(1, EnemyBlock);
+                    }
+
                 }
             }
         }
@@ -261,6 +514,7 @@ public class GameManager : MonoBehaviour
         {
             yield return new WaitForSeconds(0.5f);
             ballRecenterWall.SetActive(false);
+            someBulletsFired.text = $"Bullets Fired: {bulletsFired}";
         }
 
     }
@@ -268,9 +522,11 @@ public class GameManager : MonoBehaviour
     public void UpdateScoreLabel(int someAmt)
     {
         someScore += someAmt;
-        someLabelScore.text = $"Score: {someScore}";
-        //putting this hear for now will need to make an updateShotsFired
-        someBulletsFired.text = $"Bullets Fired: {bulletsFired}";
+        if (someLabelScore != null)
+        {
+            someLabelScore.text = $"Score: {someScore}";
+            //putting this hear for now will need to make an updateShotsFired    
+        }
     }
 
     public void Defend()
@@ -286,8 +542,12 @@ public class GameManager : MonoBehaviour
         //somelogic
 
         Debug.Log("THUMP + 1 pts");
-        var someInt = targetHealth.SubHealth(5);
-        UpdateScoreLabel(1);
+        if (targetHealth != null)
+        {
+            var someInt = targetHealth.SubHealth(5);
+            UpdateScoreLabel(1);
+        }
+        
     }
 
     public void BrickHit()
@@ -308,6 +568,8 @@ public class GameManager : MonoBehaviour
         var highLevel = false;
         var highTime = false;
 
+
+        // this needs to be its own function.
         Debug.Log("BOTTOM");
         Debug.Log("=====!!GAME OVER!!======");
         if (PlayerPrefs.HasKey("HighScore"))
@@ -317,12 +579,20 @@ public class GameManager : MonoBehaviour
             {
                 PlayerPrefs.SetInt("HighScore", someScore);
                 highScore = true;
+                if (highScore)
+                {
+                    someStatsManager.SetHighScore(someScore);
+                }                
             }
         }
         else
         {
             PlayerPrefs.SetInt("HighScore", someScore);
             highScore = true;
+            if (highScore)
+            {
+                someStatsManager.SetHighScore(someScore);
+            }            
         }
 
         if (PlayerPrefs.HasKey("HighPaddleDefends"))
@@ -332,12 +602,20 @@ public class GameManager : MonoBehaviour
             {
                 PlayerPrefs.SetInt("HighPaddleDefends", paddleDefends);
                 highDefend = true;
+                if (highDefend)
+                {
+                    someStatsManager.SetHighDefendCount(paddleDefends);
+                }                
             }
         }
         else
         {
             PlayerPrefs.SetInt("HighPaddleDefends", paddleDefends);
             highDefend = true;
+            if (highDefend)
+            {
+                someStatsManager.SetHighDefendCount(paddleDefends);
+            }            
         }
 
         if (PlayerPrefs.HasKey("HighLevel"))
@@ -347,12 +625,20 @@ public class GameManager : MonoBehaviour
             {
                 PlayerPrefs.SetInt("HighLevel", currentLevel);
                 highLevel = true;
+                if (highLevel)
+                {
+                    someStatsManager.SetHighLevelCount(currentLevel);
+                }                
             }
         }
         else
         {
             PlayerPrefs.SetInt("HighLevel", currentLevel);
             highLevel = true;
+            if (highLevel)
+            {
+                someStatsManager.SetHighLevelCount(currentLevel);
+            }            
         }
         if (PlayerPrefs.HasKey("HighTime"))
         {
@@ -361,12 +647,21 @@ public class GameManager : MonoBehaviour
             {
                 PlayerPrefs.SetFloat("HighTime", lastScenePauseTime);
                 highTime = true;
+
+                if (highTime)
+                {
+                    someStatsManager.SetHighPlayTime(lastScenePauseTime);
+                }
             }
         }
         else
         {
             PlayerPrefs.SetFloat("HighTime", lastScenePauseTime);
             highTime = true;
+            if (highTime)
+            {
+                someStatsManager.SetHighPlayTime(lastScenePauseTime);
+            }            
         }
         var highScoreString = "";
         if (highScore)
@@ -403,10 +698,15 @@ public class GameManager : MonoBehaviour
         else
         {
             highTimeString = $"Time: {lastScenePauseTime}\n";
-        }        
+        }
         EndGameScore.text = $"Good Job!\n{highLevelString}{highScoreString}{highDefendString}{highTimeString}";
-        EndGameScreen.SetActive(true);
+
+
+
+
         Time.timeScale = 0f;
+        EndGameScreen.SetActive(true);
+        
     }
 
     public void ReloadScene()
@@ -437,12 +737,14 @@ public class GameManager : MonoBehaviour
             {
                 GameObject someBrickRow = Instantiate(BrickRow, BrickRow0, Quaternion.identity);
                 currBrickCnt += 9;
+                brickRowArray.Add(someBrickRow);
                 Debug.Log($"SET currBrickCnt: {currBrickCnt}");
                 break;
             }
             case 1:
             {
                 GameObject someBrickRow = Instantiate(BrickRow, BrickRow1, Quaternion.identity);
+                brickRowArray.Add(someBrickRow);
                 //get child bricks to change color
                 Transform brickRowTransform = someBrickRow.transform;
 
@@ -462,6 +764,7 @@ public class GameManager : MonoBehaviour
             case 2:
             {
                 GameObject someBrickRow = Instantiate(BrickRow, BrickRow2, Quaternion.identity);
+                brickRowArray.Add(someBrickRow);
                 //get child bricks to change color
                 Transform brickRowTransform = someBrickRow.transform;
 
@@ -478,66 +781,31 @@ public class GameManager : MonoBehaviour
                 Debug.Log($"SET currBrickCnt: {currBrickCnt}");
                 break;
             }
+            case 3:
+            {
+                GameObject someBrickRow = Instantiate(BrickRow, BrickRow3, Quaternion.identity);
+                brickRowArray.Add(someBrickRow);
+                //get child bricks to change color
+                Transform brickRowTransform = someBrickRow.transform;
+
+                for (var i = 0; i < brickRowTransform.childCount; i++)
+                {
+                    GameObject someBrick = brickRowTransform.GetChild(i).gameObject;
+                    SpriteShapeRenderer spriteRenderer = someBrick.GetComponent<SpriteShapeRenderer>();
+                    if (spriteRenderer != null)
+                    {
+                        spriteRenderer.color = white;
+                    }
+                }
+                currBrickCnt += 9;
+                Debug.Log($"SET currBrickCnt: {currBrickCnt}");
+                break;
+            }            
             default:
             {
                 Debug.Log($"Unknown value: {rowToSpawn}");
                 break;
             }
         }
-    }
-
-    public void ResetGame()
-    {
-        // Reset all vars to initial state
-        lastScenePauseTime = 0f;
-        sceneRuntime = 0f;
-        sceneStartTime = 0f;
-        someScore = 0;
-        bulletsFired = 0;
-        paddleDefends = 0;
-        paddleHealth = 0;
-        failures = 0;
-        currentLevel = 0; 
-        currentRowLevel = 0;
-        currBrickCnt = 0;
-        paddleDefends = 0;
-
-        // Re-initialize the slotArray
-        slotArray.Clear();
-        slotArray.Add(spawnSlot0);
-        slotArray.Add(spawnSlot1);
-        slotArray.Add(spawnSlot2);
-        slotArray.Add(spawnSlot3);
-        slotArray.Add(spawnSlot4);
-
-        GameObject[] enemies = GameObject.FindGameObjectsWithTag("EnemyPaddle");
-        foreach (GameObject enemy in enemies){
-            Destroy(enemy);
-        } 
-
-        GameObject[] bricks = GameObject.FindGameObjectsWithTag("Brick");
-        foreach (GameObject brick in bricks)
-        {
-            Destroy(brick);  
-        }
-
-        controllerBall.transform.position = new Vector3(0f, 0f, 0f);
-        Rigidbody2D rb = controllerBall.GetComponent<Rigidbody2D>();
-        if (rb != null)
-        {
-            float speed = 3f; // Adjust this value to change how fast it moves down
-            rb.linearVelocity = Vector2.down * speed;
-        }
-        
-        EndGameScreen.SetActive(false);
-
-        // Update UI
-        someLabelScore.text = $"Score: {someScore}";
-        someWave.text = $"Wave: {currentLevel}";
-        someBulletsFired.text = $"Bullets Fired: {bulletsFired}";
-        EndGameScore.text = $"Wave: {currentLevel}\nScore: {someScore}";
-        SpawnRow(0);
-        SpawnEnemy(1, EnemyBlock);
-        Time.timeScale = 1f;
     }
 }

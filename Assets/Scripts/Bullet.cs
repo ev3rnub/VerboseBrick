@@ -8,6 +8,9 @@ public class Bullet : MonoBehaviour
     public float bulletForce = 100;
     private Rigidbody2D rb;
     private Transform tf;
+    public AudioSource hitAudioSource;
+    public AudioClip hitAudioClip;
+    public AudioClip hitAudioClipII;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -39,19 +42,53 @@ public class Bullet : MonoBehaviour
         
         if (collision.gameObject.CompareTag("Brick"))
         {
-            // GameManger.Instance....
+            // activate particle system on bullet hit from player/self.
+            ParticleSystem[] someVFX = collision.gameObject.GetComponentsInChildren<ParticleSystem>();
+            if (someVFX == null)
+            {
+                Debug.Log("SOMEVFX is NULL");
+            }
+            else
+            {
+                foreach (ParticleSystem somePS in someVFX)
+                {
+                    somePS.transform.localScale = new Vector3(.5f, .5f, .5f);
+                    somePS.Play();
+                }
+                
+            }
+            Debug.Log("BULLET HIT SOUND");
+            hitAudioSource.PlayOneShot(hitAudioClip, .9f);
             Debug.Log("BRICK======");
             someGameManager.targetHealth = collision.gameObject.GetComponent<Health>();
-            Destroy(this.gameObject);
+            Destroy(this.gameObject, hitAudioClip.length);
             someGameManager.BulletHit();
+            
         }
         else if (collision.gameObject.CompareTag("EnemyPaddle"))
         {
-            // GameManger.Instance....Need to change this as I added enemyblock tag. 
+            
+            // activate particle system on bullet hit from player/self.
+            ParticleSystem[] someVFX = collision.gameObject.GetComponentsInChildren<ParticleSystem>();
+            if (someVFX == null)
+            {
+                Debug.Log("SOMEVFX is NULL");
+            }
+            else
+            {
+                foreach( ParticleSystem somePS in someVFX)
+                {
+                    somePS.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
+                    somePS.Play();
+                }
+                
+            }
+            hitAudioSource.PlayOneShot(hitAudioClip, .9f);
             Debug.Log("ENEMYPADDLE======");
             someGameManager.targetHealth = collision.gameObject.GetComponent<Health>();
-            Destroy(this.gameObject);
-            someGameManager.BulletHit();          
+            Destroy(this.gameObject, hitAudioClip.length);
+            someGameManager.BulletHit();
+            
         }
         else if (collision.gameObject.CompareTag("Paddle"))
         {
@@ -59,6 +96,14 @@ public class Bullet : MonoBehaviour
             Debug.Log("PADDLE======");
             someGameManager.targetHealth = collision.gameObject.GetComponent<Health>();
             someGameManager.BulletHit();
+        }
+        else if (collision.gameObject.CompareTag("WallBot"))
+        {
+            Debug.Log("====== BULLET HIT BOTWALL ======");
+        }
+        else if (collision.gameObject.CompareTag("Ball"))
+        {
+            hitAudioSource.PlayOneShot(hitAudioClipII, .9f);
         }
     }
 }
