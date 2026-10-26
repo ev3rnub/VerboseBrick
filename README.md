@@ -39,8 +39,13 @@ This will describe and list features that are implemented to a sufficient manner
 10/22/2026: Implemented player shooting, bullet physics. Implemented "bricks" for the player to break and gather points. {10-1430}
 
 10/22/2026: Implemented core game loop, with end game screen. Added a coroutine to Gamemanager to deactivate a edge collider to prevent cheese early game loss. Implemented playtime tracking, successful defends, and bullets fired gui elements. Implemented highscore, high level, high time and high defense high scores via PlayerPrefs. (15-22)
+
 10/22/2026: Implemented Audio, w/audio mixer groups. Added music and sound fx. Added playoneshot for bullet and play for other gameobject collisions. (22-23)
+
 10/23/2026: Implemented main menu w/options and credits. Attempted to fix bug with reloading a scene to no avail. (07-2100)
+
 10/24/2026: Reimplemented/updated ResetGame() funciton in hopes of fixing reloading issue. Fixed issue. Removed gameplay singleton, defined a statsmanager singleton in its place per assignment requirement. (05-19)
+
 10/25/2026: Reimplemented spawning logic, defined a StatsManager singleton. Added clear local highscore button in optionsGUI which clears high scores. (08-16)
+
 10/25/2026: Added an explosion effect to the EnemyPaddle. Playtested a bit. (16-17)
