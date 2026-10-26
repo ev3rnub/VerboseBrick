@@ -1,7 +1,7 @@
 # GPE104 Unity Project
 
 **Course:** GPE104  
-**Professor:** Matthew Henry  
+**Professor:** Matthew Henry
 **Student:** Chad V
 **Engine:** Unity 6.6
 

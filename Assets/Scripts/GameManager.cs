@@ -666,7 +666,7 @@ public class GameManager : MonoBehaviour
         var highScoreString = "";
         if (highScore)
         {
-            highScoreString = $"NEW HIGH SCORE: {someScore}\n";
+            highScoreString = $"High Score: {someScore}\n";
         }
         else
         {
@@ -675,7 +675,7 @@ public class GameManager : MonoBehaviour
         var highDefendString = "";
         if (highDefend)
         {
-            highDefendString = $"NEW HIGH DEFEND: {paddleDefends}\n";
+            highDefendString = $"High Defend: {paddleDefends}\n";
         }
         else
         {
@@ -684,7 +684,7 @@ public class GameManager : MonoBehaviour
         var highLevelString = "";
         if (highLevel)
         {
-            highLevelString = $"NEW HIGH WAVE: {currentLevel}\n";
+            highLevelString = $"High Wave: {currentLevel}\n";
         }
         else
         {
@@ -693,7 +693,7 @@ public class GameManager : MonoBehaviour
         var highTimeString = "";
         if (highTime)
         {
-            highTimeString = $"NEW HIGH TIME: {lastScenePauseTime}\n";
+            highTimeString = $"High Time: {lastScenePauseTime}\n";
         }
         else
         {

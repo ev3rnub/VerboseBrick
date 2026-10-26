@@ -4,7 +4,7 @@
     public class ScreenBoundaryTeleport : MonoBehaviour
     {
        public Camera mainCamera;
-       public float padding = 0.5f; // Extra space from edge
+       public float padding = 1.5f; // Extra space from edge
        public bool checkLeft = true;
        public bool checkRight = true;
        public bool checkTop = true;
@@ -28,8 +28,8 @@
             float cameraWidth = cameraHeight * mainCamera.aspect;
             Vector3 cameraPos = mainCamera.transform.position;
 
-            float leftBoundary = cameraPos.x - (cameraWidth / 2f);
-            float rightBoundary = cameraPos.x + (cameraWidth / 2f);
+            float leftBoundary = cameraPos.x - (cameraWidth / 2.5f);
+            float rightBoundary = cameraPos.x + (cameraWidth / 2.5f);
             float topBoundary = cameraPos.y + (cameraHeight / 2f);
             float bottomBoundary = cameraPos.y - (cameraHeight / 2f);
 
